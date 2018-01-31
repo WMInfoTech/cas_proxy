@@ -7,6 +7,7 @@ CAS Apache Reverse Proxy
 - `CAS_HOST`: The hostname of the CAS server (e.g. cas.example.edu)
 - `CAS_USERS`: A space delimited list of user IDs that should be authenticated
 - `PROXY_TARGET`: The proxy target to protect
+- `CAS_PROXY_HOST`: The public protocol, hostname, and port (if not the protocol default)
 
 ## Example
 ```yaml
@@ -25,6 +26,7 @@ services:
       CAS_HOST: cas.example.edu
       CAS_USERS: 'user1 user2'
       PROXY_TARGET: http://whoami:8000/
+      CAS_PROXY_HOST: https://authed.example.edu
 
   whoami:
     image: jwilder/whoami
