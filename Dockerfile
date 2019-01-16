@@ -2,6 +2,8 @@ FROM debian:jessie-slim
 
 RUN apt-get update && \
     apt-get install apache2 libapache2-mod-auth-cas -y && \
+    mkdir -p /var/cache/apache2/mod_auth_cas && \
+    chown -R www-data:www-data /var/cache/apache2/mod_auth_cas
     rm -Rf /var/lib/apt/lists/*
 
 COPY auth_cas.conf /etc/apache2/mods-available/auth_cas.conf
