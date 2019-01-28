@@ -1,19 +1,34 @@
-FROM debian:jessie-slim
+FROM ubuntu:18.04 AS build
+
+RUN apt-get update \
+    && apt-get install -y apache2-dev build-essential wget libssl-dev libcurl4-openssl-dev libpcre++-dev \
+    && wget -O mod_auth_cas.tar.gz https://github.com/apereo/mod_auth_cas/archive/v1.2-RC1.tar.gz \
+    && tar -zxf mod_auth_cas.tar.gz \
+    && cd mod_auth_cas-1.2-RC1 \
+    && autoreconf -ivh \
+    && ./configure \
+    && make \
+    && make install
+
+FROM ubuntu:18.04
 
 RUN apt-get update && \
-    apt-get install apache2 libapache2-mod-auth-cas -y && \
+    apt-get install apache2 libpcre3 libcurl4 -y && \
     mkdir -p /var/cache/apache2/mod_auth_cas && \
     chown -R www-data:www-data /var/cache/apache2/mod_auth_cas && \
     rm -Rf /var/lib/apt/lists/*
 
 COPY auth_cas.conf /etc/apache2/mods-available/auth_cas.conf
+COPY auth_cas.load /etc/apache2/mods-available/auth_cas.load
+COPY remoteip.conf /etc/apache2/mods-available/remoteip.conf
 COPY default-site.conf /etc/apache2/sites-available/default.conf
-COPY httpd-foreground /usr/local/bin/httpd-foreground
+COPY --from=build /usr/lib/apache2/modules/mod_auth_cas.so /usr/lib/apache2/modules/mod_auth_cas.so
 
 RUN a2enmod auth_cas && \
     a2enmod authz_groupfile && \
     a2enmod proxy && \
     a2enmod proxy_http && \
+    a2enmod remoteip && \
     a2ensite default && \
     a2dissite 000-default
 
