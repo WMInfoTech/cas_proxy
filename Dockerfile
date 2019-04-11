@@ -24,6 +24,8 @@ COPY remoteip.conf /etc/apache2/mods-available/remoteip.conf
 COPY default-site.conf /etc/apache2/sites-available/default.conf
 COPY --from=build /usr/lib/apache2/modules/mod_auth_cas.so /usr/lib/apache2/modules/mod_auth_cas.so
 
+ENV PRESERVE_HOST On
+
 RUN a2enmod auth_cas && \
     a2enmod authz_groupfile && \
     a2enmod proxy && \
