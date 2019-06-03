@@ -26,6 +26,7 @@ COPY --from=build /usr/lib/apache2/modules/mod_auth_cas.so /usr/lib/apache2/modu
 
 ENV PRESERVE_HOST On
 ENV PROXY_ADD_HEADERS On
+ENV PROXY_PATH /
 
 RUN a2enmod auth_cas && \
     a2enmod authz_groupfile && \
