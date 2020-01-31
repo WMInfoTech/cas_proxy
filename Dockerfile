@@ -12,6 +12,8 @@ RUN apt-get update \
 
 FROM ubuntu:18.04
 
+ENV ALLOWED_IPS=127.0.0.1
+
 RUN apt-get update && \
     apt-get install apache2 libpcre3 libcurl4 -y && \
     mkdir -p /var/cache/apache2/mod_auth_cas && \
