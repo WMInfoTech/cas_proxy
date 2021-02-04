@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   cas_proxy:
+    build: .
     image: cas-proxy
     environment:
       SERVER_NAME: localhost
@@ -9,6 +10,7 @@ services:
       CAS_USERS: 'example'
       PROXY_TARGET: http://backend:8080
       CAS_PROXY_HOST: http://localhost:8080
+      WEBSOCKET_TARGET: ws://backend:8080
     ports:
     - target: 80
       published: 8080
