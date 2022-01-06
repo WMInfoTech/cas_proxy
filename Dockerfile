@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 AS build
+FROM docker.io/ubuntu:20.04 AS build
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2-dev build-essential wget libssl-dev libcurl4-openssl-dev libpcre++-dev \
@@ -10,7 +10,7 @@ RUN apt-get update \
     && make \
     && make install
 
-FROM ubuntu:20.04
+FROM docker.io/ubuntu:20.04
 
 ENV ALLOWED_IPS=127.0.0.1
 
