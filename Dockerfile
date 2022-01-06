@@ -1,7 +1,7 @@
-FROM ubuntu:18.04 AS build
+FROM ubuntu:20.04 AS build
 
 RUN apt-get update \
-    && apt-get install -y apache2-dev build-essential wget libssl-dev libcurl4-openssl-dev libpcre++-dev \
+    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y apache2-dev build-essential wget libssl-dev libcurl4-openssl-dev libpcre++-dev \
     && wget -O mod_auth_cas.tar.gz https://github.com/apereo/mod_auth_cas/archive/v1.2-RC1.tar.gz \
     && tar -zxf mod_auth_cas.tar.gz \
     && cd mod_auth_cas-1.2-RC1 \
@@ -10,13 +10,13 @@ RUN apt-get update \
     && make \
     && make install
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-RUN apt-get update && \
-    apt-get install apache2 libpcre3 libcurl4 -y && \
-    mkdir -p /var/cache/apache2/mod_auth_cas && \
-    chown -R www-data:www-data /var/cache/apache2/mod_auth_cas && \
-    rm -Rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive TZ=America/New_York apt-get install apache2 libpcre3 libcurl4 -y \
+    && mkdir -p /var/cache/apache2/mod_auth_cas \
+    && chown -R www-data:www-data /var/cache/apache2/mod_auth_cas \
+    && rm -Rf /var/lib/apt/lists/*
 
 COPY auth_cas.conf /etc/apache2/mods-available/auth_cas.conf
 COPY auth_cas.load /etc/apache2/mods-available/auth_cas.load
